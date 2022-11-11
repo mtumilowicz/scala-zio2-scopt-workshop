@@ -2,7 +2,7 @@ package app
 
 import app.Command.{MultiplicationCommand, SumCommand}
 import scopt.OParser
-import zio.{ZIO, ZIOAppArgs, ZIOAppDefault, Console}
+import zio.{Console, ExitCode, ZIO, ZIOAppArgs, ZIOAppDefault}
 
 
 object CommandLineApp2 extends ZIOAppDefault {
@@ -37,7 +37,11 @@ object CommandLineApp2 extends ZIOAppDefault {
           opt[Int]("c2")
             .action((x, c) => c.asInstanceOf[MultiplicationCommand].copy(c2 = x))
             .text("c2 is a Int property"),
-        )
+        ),
+      checkConfig {
+        case Command.NoCommand => failure("no command")
+        case _ => success
+      }
       // more options here...
     )
   }
@@ -45,13 +49,13 @@ object CommandLineApp2 extends ZIOAppDefault {
   def run =
     for {
       args <- ZIO.serviceWith[ZIOAppArgs](_.getArgs)
-      _ <- OParser.parse(parser, args, Command.Noop) match {
+      _ <- OParser.parse(parser, args, Command.NoCommand) match {
         case Some(cmd) => cmd match {
           case SumCommand(c1, c2) => Console.printLine(c1 + c2)
           case MultiplicationCommand(c1, c2) => Console.printLine(c1 * c2)
-          case Command.Noop => Console.printLine("noop")
+          case Command.NoCommand => ZIO.unit
         }
-        case None => Console.printLine("noop")
+        case None => ZIO.fail(ExitCode(1))
       }
     } yield ()
 
