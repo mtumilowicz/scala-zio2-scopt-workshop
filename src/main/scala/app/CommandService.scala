@@ -8,8 +8,8 @@ import java.io.IOException
 class CommandService {
 
   def execute(command: Command) = command match {
-    case Sum(c1, c2) => wrap(Console.printLine(c1 + c2))
-    case Multiplication(c1, c2) => wrap(Console.printLine(c1 * c2))
+    case Sum(c1, c2) => wrap(Console.print(c1 + c2))
+    case Multiplication(c1, c2) => wrap(Console.print(c1 * c2))
     case Command.Default => CommandExecutionError.zio(CommandExecutionError.emptyCommand.message)
   }
 
