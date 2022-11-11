@@ -11,6 +11,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio" % "2.0.3",
       "com.github.scopt" %% "scopt" % "4.1.0",
+      "eu.timepit" %% "refined"                 % "0.10.1",
       "dev.zio" %% "zio-test" % "2.0.3" % Test
     ),
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
