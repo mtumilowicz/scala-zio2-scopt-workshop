@@ -1,0 +1,2 @@
+* https://github.com/scopt/scopt
+* https://www.baeldung.com/scala/read-command-line-arguments
