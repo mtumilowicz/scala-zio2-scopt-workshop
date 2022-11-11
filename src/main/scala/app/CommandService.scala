@@ -1,11 +1,11 @@
 package app
 
 import app.Command.{Multiplication, Sum}
-import zio.{Console, ExitCode, IO, UIO, ZIO}
+import zio.{Console, ExitCode, IO, UIO, ZIO, ZLayer}
 
 import java.io.IOException
 
-object CommandService {
+class CommandService {
 
   def execute(command: Command) = command match {
     case Sum(c1, c2) => wrap(Console.printLine(c1 + c2))
@@ -16,4 +16,8 @@ object CommandService {
   private def wrap(execution: IO[IOException, Unit]): IO[CommandExecutionError, Unit] =
     execution.mapError(CommandExecutionError.fromError)
 
+}
+
+object CommandService {
+  val live = ZLayer.succeed(new CommandService())
 }
