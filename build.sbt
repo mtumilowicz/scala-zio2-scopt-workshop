@@ -12,7 +12,10 @@ lazy val root = (project in file("."))
       "dev.zio" %% "zio" % "2.0.3",
       "com.github.scopt" %% "scopt" % "4.1.0",
       "eu.timepit" %% "refined"                 % "0.10.1",
-      "dev.zio" %% "zio-test" % "2.0.3" % Test
+      "ch.qos.logback" % "logback-classic" % "1.4.4",
+      "dev.zio" %% "zio-test" % "2.0.3" % Test,
+      "dev.zio" %% "zio-test-sbt" % "2.0.3" % Test,
+      "dev.zio" %% "zio-test-magnolia" % "2.0.3" % Test
     ),
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
     Docker / packageName := "scopt-playground",

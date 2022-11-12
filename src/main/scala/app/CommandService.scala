@@ -1,16 +1,16 @@
 package app
 
 import app.Command.{Divide, Multiplication, Sum}
-import zio.{Console, ExitCode, IO, UIO, ZIO, ZLayer}
+import zio.{Console, IO, ZLayer}
 
 import java.io.IOException
 
 class CommandService {
 
   def execute(command: Command) = command match {
-    case Sum(c1, c2) => wrap(Console.print(c1 + c2))
-    case Multiplication(c1, c2) => wrap(Console.print(c1 * c2))
-    case Divide(c1, c2) => wrap(Console.print(c1 / c2.value))
+    case Sum(c1, c2) => wrap(Console.printLine(c1 + c2))
+    case Multiplication(c1, c2) => wrap(Console.printLine(c1 * c2))
+    case Divide(c1, c2) => wrap(Console.printLine(c1 / c2.value))
     case Command.Default => CommandExecutionError.zio(CommandExecutionError.emptyCommand.message)
   }
 

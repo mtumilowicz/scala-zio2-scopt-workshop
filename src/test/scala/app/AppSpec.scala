@@ -1,9 +1,8 @@
 package app
 
 import zio.test.Assertion.{equalTo, fails}
-import zio.test.TestAspect.sequential
 import zio.test.{TestConsole, ZIOSpecDefault, assertTrue, assertZIO}
-import zio.{Chunk, ULayer, ZIOAppArgs, ZLayer}
+import zio.{Chunk, ZIOAppArgs, ZLayer}
 
 object AppSpec extends ZIOSpecDefault {
 
@@ -22,25 +21,27 @@ object AppSpec extends ZIOSpecDefault {
     test("sum") {
       for {
         _ <- subject
-        output <- TestConsole.output
-      } yield assertTrue(output == Vector("5"))
+        result <- firstOutput
+      } yield assertTrue(result == "5")
     }.provideSome[CommandGateway](argsLayer(sumCommand)),
     test("multiplication") {
       for {
         _ <- subject
-        output <- TestConsole.output
-      } yield assertTrue(output == Vector("6"))
+        result <- firstOutput
+      } yield assertTrue(result == "6")
     }.provideSome[CommandGateway](argsLayer(multiplicationCommand)),
     test("division, divisor != 0") {
       for {
         _ <- subject
-        output <- TestConsole.output
-      } yield assertTrue(output == Vector("1"))
+        result <- firstOutput
+      } yield assertTrue(result == "1")
     }.provideSome[CommandGateway](argsLayer(divisionCommand(2))),
     test("division, divisor == 0") {
       assertZIO(subject.exit)(fails(equalTo(CommandExecutionError.notSupported)))
     }.provideSome[CommandGateway](argsLayer(divisionCommand(0))),
-  ).provide(CommandGateway.live, CommandService.live) @@ sequential
+  ).provideSome(CommandGateway.live, CommandService.live)
 
-  private def argsLayer(chunk: Chunk[String]): ULayer[ZIOAppArgs] = ZLayer.succeed(ZIOAppArgs(chunk))
+  private def argsLayer(chunk: Chunk[String]) = ZLayer.succeed(ZIOAppArgs(chunk))
+
+  private val firstOutput = TestConsole.output.map(_.head).map(_.trim)
 }
