@@ -2,6 +2,7 @@ package app
 
 import app.Command.{Divide, Multiplication, Sum}
 import eu.timepit.refined._
+import eu.timepit.refined.auto._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.numeric._
 import eu.timepit.refined.predicates.all.Or
@@ -52,12 +53,12 @@ object CommandParser {
             .text("c2 is a Int property"),
         ),
       cmd("div")
-        .action((_, _) => Command.Multiplication(0, 0))
-        .text("mult is an multiplication property")
+        .action((_, _) => Command.Divide(0, 1))
+        .text("div is an multiplication property")
         .children(
           opt[Int]("c1")
             .required()
-            .action((x, c) => c.asInstanceOf[Multiplication].copy(c1 = x))
+            .action((x, c) => c.asInstanceOf[Divide].copy(c1 = x))
             .text("c1 is a Int property"),
           opt[NonZeroInt]("c2")
             .required()
