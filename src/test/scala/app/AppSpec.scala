@@ -9,6 +9,7 @@ object AppSpec extends ZIOSpecDefault {
   val subject = App.program
   val sumCommand = Chunk("sum", "--c1", "2", "--c2", "3")
   val multiplicationCommand = Chunk("mult", "--c1", "2", "--c2", "3")
+  val goEastCommand = Chunk("go", "--direction", CardinalDirection.East.entryName)
   private def divisionCommand(divisor: Int) = Chunk("div", "--c1", "2", "--c2", divisor.toString)
 
   override def spec = suite("a")(
@@ -18,6 +19,7 @@ object AppSpec extends ZIOSpecDefault {
     multiplicationSuccess,
     divisionNonZeroDivisorSuccess,
     divisionZeroDivisorError,
+    goDirectionEastSuccess
   ).provideSome(CommandGateway.live, CommandService.live)
 
   lazy val emptyArgsError = test("empty args => error") {
@@ -53,6 +55,12 @@ object AppSpec extends ZIOSpecDefault {
     assertZIO(subject.exit)(fails(equalTo(CommandExecutionError.notSupported)))
   }.provideSome[CommandGateway](argsLayer(divisionCommand(0)))
 
+  lazy val goDirectionEastSuccess = test("go direction East") {
+    for {
+      _ <- subject
+      result <- firstOutput
+    } yield assertTrue(result == "going into East")
+  }.provideSome[CommandGateway](argsLayer(goEastCommand))
   private def argsLayer(chunk: Chunk[String]) = ZLayer.succeed(ZIOAppArgs(chunk))
 
   private val firstOutput = TestConsole.output.map(_.head).map(_.trim)
