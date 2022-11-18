@@ -1,9 +1,9 @@
-package app.infrastructure.commands
+package app.infrastructure.command
 
 import app.domain.Command
-import app.domain.Command.{Sum, Divide, Multiply}
+import app.domain.Command.{Divide, Multiply, Sum}
 import app.domain.Types.NonZeroInt
-import app.infrastructure.scoptreaders.RefinedReaders.nonZeroRead
+import app.infrastructure.scoptreaders.RefinedReader.nonZeroRead
 import eu.timepit.refined.auto._
 import scopt.OParser
 

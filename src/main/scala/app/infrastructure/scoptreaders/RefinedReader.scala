@@ -3,7 +3,7 @@ package app.infrastructure.scoptreaders
 import app.domain.Types.{NonZero, NonZeroInt}
 import eu.timepit.refined.refineV
 
-object RefinedReaders {
+object RefinedReader {
 
   implicit val nonZeroRead: scopt.Read[NonZeroInt] =
     scopt.Read.intRead.map(unsafeParseInt)

@@ -1,4 +1,4 @@
-package app.infrastructure.commands
+package app.infrastructure.command
 
 import app.domain.Command.Go
 import app.domain.{CardinalDirection, Command}

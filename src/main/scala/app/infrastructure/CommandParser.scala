@@ -1,12 +1,7 @@
 package app.infrastructure
 
-import app.domain.Command.{Sum, Divide, Go, Multiply}
-import app.domain.{CardinalDirection, Command}
-import app.domain.Types.{NonZero, NonZeroInt}
-import app.infrastructure.commands.{ArithmeticCommand, MovementCommand}
-import eu.timepit.refined._
-import eu.timepit.refined.auto._
-import monocle.syntax.all._
+import app.domain.Command
+import app.infrastructure.command.{ArithmeticCommand, MovementCommand}
 import scopt.OParser
 
 object CommandParser {
