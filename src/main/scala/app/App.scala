@@ -1,5 +1,7 @@
 package app
 
+import app.domain.CommandService
+import app.gateway.CommandGateway
 import zio.{ZIO, ZIOAppArgs, ZIOAppDefault}
 
 

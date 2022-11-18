@@ -1,4 +1,4 @@
-package app
+package app.domain
 
 import cats.implicits.showInterpolator
 import zio.{Console, IO, ZLayer}
@@ -9,7 +9,7 @@ class CommandService {
 
   def execute(command: Command) = command match {
     case Command.Sum(c1, c2) => wrap(Console.printLine(c1 + c2))
-    case Command.Multiplication(c1, c2) => wrap(Console.printLine(c1 * c2))
+    case Command.Multiply(c1, c2) => wrap(Console.printLine(c1 * c2))
     case Command.Divide(c1, c2) => wrap(Console.printLine(c1 / c2.value))
     case Command.Go(direction) => direction match {
       case Some(dir) => Console.printLine(show"going into $dir")

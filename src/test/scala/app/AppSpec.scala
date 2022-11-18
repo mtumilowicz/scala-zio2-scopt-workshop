@@ -1,5 +1,7 @@
 package app
 
+import app.domain.{CardinalDirection, CommandExecutionError, CommandService}
+import app.gateway.CommandGateway
 import zio.test.Assertion.{equalTo, fails}
 import zio.test.{TestConsole, ZIOSpecDefault, assertTrue, assertZIO}
 import zio.{Chunk, ZIOAppArgs, ZLayer}
@@ -9,8 +11,8 @@ object AppSpec extends ZIOSpecDefault {
   val subject = App.program
   val sumCommand = Chunk("sum", "--c1", "2", "--c2", "3")
   val multiplicationCommand = Chunk("mult", "--c1", "2", "--c2", "3")
-  val goEastCommand = Chunk("go", "--direction", CardinalDirection.East.entryName)
-  private def divisionCommand(divisor: Int) = Chunk("div", "--c1", "2", "--c2", divisor.toString)
+  val goEastCommand = Chunk("go", "--dir", CardinalDirection.East.entryName)
+  private def divisionCommand(divisor: Int) = Chunk("div", "--d", "2", "--dd", divisor.toString)
 
   override def spec = suite("a")(
     emptyArgsError,

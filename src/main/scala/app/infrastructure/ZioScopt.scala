@@ -1,4 +1,4 @@
-package app
+package app.infrastructure
 
 import scopt.OParser
 import zio.{IO, ZIO}

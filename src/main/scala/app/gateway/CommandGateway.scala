@@ -1,5 +1,7 @@
-package app
+package app.gateway
 
+import app.domain.{Command, CommandExecutionError, CommandService}
+import app.infrastructure.{CommandParser, ZioScopt}
 import zio.{ZIO, ZLayer}
 
 case class CommandGateway(service: CommandService) {
