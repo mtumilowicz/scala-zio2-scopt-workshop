@@ -1,2 +1,18 @@
-* https://github.com/scopt/scopt
-* https://www.baeldung.com/scala/read-command-line-arguments
+# scala-zio2-scopt-monocle-workshop
+
+* references
+    * https://github.com/scopt/scopt
+    * https://www.baeldung.com/scala/read-command-line-arguments
+    * https://github.com/optics-dev/Monocle
+    * https://www.optics.dev/Monocle/
+
+## preface
+* goals of this workshop
+    * introduction into command line applications using scopt
+    * introduction into lenses with monocle
+* workshop
+    * implement command to print random number that can be long or int and positive or negative
+    * example: `draw --n int --positive`
+
+* scopt
+* monocle
