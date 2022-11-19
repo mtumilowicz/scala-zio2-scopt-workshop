@@ -7,7 +7,7 @@ lazy val root = (project in file("."))
   .enablePlugins(DockerPlugin)
   .enablePlugins(AshScriptPlugin)
   .settings(
-    name := "scala-zio2-scopt-workshop",
+    name := "scala-zio2-scopt-monocle-workshop",
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio" % "2.0.3",
       "com.github.scopt" %% "scopt" % "4.1.0",
