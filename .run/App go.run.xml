@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="app.App" />
+    <module name="scala-zio2-scopt-monocle-workshop" />
+    <option name="PROGRAM_PARAMETERS" value="go --dir south" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="app.infrastructure.command.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
