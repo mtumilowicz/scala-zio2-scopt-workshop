@@ -3,7 +3,6 @@ package app.infrastructure.command
 import app.domain.Command.Go
 import app.domain.{CardinalDirection, Command}
 import app.infrastructure.scoptreaders.CardinalDirectionReader._
-import monocle.syntax.all._
 import scopt.OParser
 
 object MovementCommand {
@@ -17,7 +16,7 @@ object MovementCommand {
     .children(
       opt[CardinalDirection]("dir")
         .required()
-        .action((value, command) => command.asInstanceOf[Go].focus(_.direction).replace(Some(value)))
+        .action((value, command) => command.asInstanceOf[Go].copy(direction = Some(value)))
         .text("dir is a direction to go"),
     )
 
