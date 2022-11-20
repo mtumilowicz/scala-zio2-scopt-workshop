@@ -1,7 +1,7 @@
 package app.gateway
 
 import app.domain.{Command, CommandExecutionError, CommandService}
-import app.infrastructure.{CommandParser, ZioScopt}
+import app.infrastructure.CommandParser
 import scopt.OParser
 import zio.{IO, UIO, ZIO, ZLayer}
 
