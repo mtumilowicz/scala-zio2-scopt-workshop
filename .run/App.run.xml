@@ -2,7 +2,7 @@
   <configuration default="false" name="App" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="app.App" />
     <module name="scala-zio2-scopt-workshop" />
-    <option name="PROGRAM_PARAMETERS" value="help" />
+    <option name="PROGRAM_PARAMETERS" value="--help" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="app.*" />

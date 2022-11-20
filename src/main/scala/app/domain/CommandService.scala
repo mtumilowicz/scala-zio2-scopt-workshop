@@ -1,7 +1,7 @@
 package app.domain
 
 import cats.implicits.showInterpolator
-import zio.{Console, IO, ZLayer}
+import zio.{Console, IO, ZIO, ZLayer}
 
 import java.io.IOException
 
@@ -18,6 +18,7 @@ class CommandService {
       case Some(dir) => wrap(Console.printLine(show"going into $dir"))
       case None => wrap(Console.printLine(show"no direction home"))
     }
+    case Command.Help => ZIO.unit
     case Command.Default => CommandExecutionError.zio(CommandExecutionError.emptyCommand.message)
   }
 

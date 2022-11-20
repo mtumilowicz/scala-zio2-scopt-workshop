@@ -15,6 +15,7 @@ object AppSpec extends ZIOSpecDefault {
   val randomPositive = Chunk("random", "--positive")
   val randomNegative = Chunk("random", "--negative")
   val randomDefault = Chunk("random")
+  val help = Chunk("--help")
   private def divisionCommand(divisor: Int) = Chunk("divide", "--dividend", "2", "--divisor", divisor.toString)
 
   override def spec = suite("app tests")(
@@ -27,7 +28,8 @@ object AppSpec extends ZIOSpecDefault {
     goDirectionEastSuccess,
     randomPositiveSuccess,
     randomNegativeSuccess,
-    randomDefaultSuccess
+    randomDefaultSuccess,
+    helpSuccess
   ).provideSome(CommandGateway.live, CommandService.live)
 
   lazy val emptyArgsError = test("empty args => error") {
@@ -90,6 +92,13 @@ object AppSpec extends ZIOSpecDefault {
       result <- firstOutput
     } yield assert(result.toInt)(isGreaterThanEqualTo(0))
   }.provideSome[CommandGateway](argsLayer(randomDefault))
+
+  lazy val helpSuccess = test("help") {
+    for {
+      _ <- subject
+      result <- firstOutput
+    } yield assertTrue(result.nonEmpty)
+  }.provideSome[CommandGateway](argsLayer(help))
 
 
   private def argsLayer(chunk: Chunk[String]) = ZLayer.succeed(ZIOAppArgs(chunk))

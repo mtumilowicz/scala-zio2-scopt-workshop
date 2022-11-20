@@ -15,7 +15,7 @@ object CommandParser {
     OParser.sequence(
       programName("scopt"),
       head("scopt", "4.x"),
-      help("help"),
+      help("help").action((_, _) => Command.Help),
       ArithmeticCommand.sum,
       ArithmeticCommand.multiplication,
       ArithmeticCommand.divide,
