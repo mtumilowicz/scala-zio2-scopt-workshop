@@ -15,9 +15,11 @@ object CommandParser {
     OParser.sequence(
       programName("scopt"),
       head("scopt", "4.x"),
+      help("help"),
       ArithmeticCommand.sum,
       ArithmeticCommand.multiplication,
       ArithmeticCommand.divide,
+      ArithmeticCommand.random,
       MovementCommand.go
     )
   }

@@ -2,8 +2,8 @@ package app
 
 import app.domain.{CardinalDirection, CommandExecutionError, CommandService}
 import app.gateway.CommandGateway
-import zio.test.Assertion.{equalTo, fails}
-import zio.test.{TestConsole, ZIOSpecDefault, assertTrue, assertZIO}
+import zio.test.Assertion.{equalTo, fails, isGreaterThanEqualTo, isLessThan}
+import zio.test.{TestConsole, ZIOSpecDefault, assert, assertTrue, assertZIO}
 import zio.{Chunk, ZIOAppArgs, ZLayer}
 
 object AppSpec extends ZIOSpecDefault {
@@ -12,16 +12,22 @@ object AppSpec extends ZIOSpecDefault {
   val sumCommand = Chunk("sum", "--c1", "2", "--c2", "3")
   val multiplicationCommand = Chunk("mult", "--c1", "2", "--c2", "3")
   val goEastCommand = Chunk("go", "--dir", CardinalDirection.East.entryName)
+  val randomPositive = Chunk("random", "--positive")
+  val randomNegative = Chunk("random", "--negative")
+  val randomDefault = Chunk("random")
   private def divisionCommand(divisor: Int) = Chunk("div", "--d", "2", "--dd", divisor.toString)
 
-  override def spec = suite("a")(
+  override def spec = suite("app tests")(
     emptyArgsError,
     unknownArgsError,
     sumSuccess,
     multiplicationSuccess,
     divisionNonZeroDivisorSuccess,
     divisionZeroDivisorError,
-    goDirectionEastSuccess
+    goDirectionEastSuccess,
+    randomPositiveSuccess,
+    randomNegativeSuccess,
+    randomDefaultSuccess
   ).provideSome(CommandGateway.live, CommandService.live)
 
   lazy val emptyArgsError = test("empty args => error") {
@@ -63,6 +69,29 @@ object AppSpec extends ZIOSpecDefault {
       result <- firstOutput
     } yield assertTrue(result == "going into East")
   }.provideSome[CommandGateway](argsLayer(goEastCommand))
+
+  lazy val randomPositiveSuccess = test("draw random positive int") {
+    for {
+      _ <- subject
+      result <- firstOutput
+    } yield assert(result.toInt)(isGreaterThanEqualTo(0))
+  }.provideSome[CommandGateway](argsLayer(randomPositive))
+
+  lazy val randomNegativeSuccess = test("draw random positive int") {
+    for {
+      _ <- subject
+      result <- firstOutput
+    } yield assert(result.toInt)(isLessThan(0))
+  }.provideSome[CommandGateway](argsLayer(randomNegative))
+
+  lazy val randomDefaultSuccess = test("default means random positive") {
+    for {
+      _ <- subject
+      result <- firstOutput
+    } yield assert(result.toInt)(isGreaterThanEqualTo(0))
+  }.provideSome[CommandGateway](argsLayer(randomDefault))
+
+
   private def argsLayer(chunk: Chunk[String]) = ZLayer.succeed(ZIOAppArgs(chunk))
 
   private val firstOutput = TestConsole.output.map(_.head).map(_.trim)
