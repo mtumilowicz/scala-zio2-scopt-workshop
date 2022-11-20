@@ -9,10 +9,10 @@
 ## preface
 * goals of this workshop
     * introduction into command line applications using scopt
-    * introduction into lenses with monocle
 * workshop
     * implement command to print random number that can be long or int and positive or negative
-    * example: `draw --n int --positive`
+    * example: `random --n int --positive`
 
-* scopt
-* monocle
+## scopt
+* command line options parsing library
+* functional DSL
