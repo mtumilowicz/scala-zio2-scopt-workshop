@@ -19,7 +19,7 @@ lazy val root = (project in file("."))
       "dev.zio" %% "zio-test-magnolia" % "2.0.3" % Test
     ),
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"),
-    Docker / packageName := "scopt-playground",
+    Docker / packageName := "scala-zio2-scopt-workshop",
     dockerBaseImage := "openjdk:11-jre-slim-buster",
     dockerExposedPorts ++= Seq(8080),
     dockerUpdateLatest := true,
