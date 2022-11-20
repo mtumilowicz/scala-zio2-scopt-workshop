@@ -13,6 +13,6 @@ object App extends ZIOAppDefault {
     _ <- commandGateway.execute(args.toList)
   } yield ()
 
-  def run = program.provideSome(CommandGateway.live, CommandService.live)
+  val run = program.provideSome(CommandGateway.live, CommandService.live)
 
 }
