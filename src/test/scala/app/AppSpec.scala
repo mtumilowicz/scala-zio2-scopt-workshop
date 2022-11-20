@@ -9,13 +9,13 @@ import zio.{Chunk, ZIOAppArgs, ZLayer}
 object AppSpec extends ZIOSpecDefault {
 
   val subject = App.program
-  val sumCommand = Chunk("sum", "--c1", "2", "--c2", "3")
-  val multiplicationCommand = Chunk("mult", "--c1", "2", "--c2", "3")
-  val goEastCommand = Chunk("go", "--dir", CardinalDirection.East.entryName)
+  val sumCommand = Chunk("sum", "--constituent1", "2", "--constituent2", "3")
+  val multiplicationCommand = Chunk("multiplication", "--constituent1", "2", "--constituent2", "3")
+  val goEastCommand = Chunk("go", "--direction", CardinalDirection.East.entryName)
   val randomPositive = Chunk("random", "--positive")
   val randomNegative = Chunk("random", "--negative")
   val randomDefault = Chunk("random")
-  private def divisionCommand(divisor: Int) = Chunk("div", "--d", "2", "--dd", divisor.toString)
+  private def divisionCommand(divisor: Int) = Chunk("divide", "--dividend", "2", "--divisor", divisor.toString)
 
   override def spec = suite("app tests")(
     emptyArgsError,

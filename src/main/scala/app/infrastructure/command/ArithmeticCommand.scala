@@ -16,42 +16,49 @@ object ArithmeticCommand {
     .action((_, _) => Command.Sum(0, 0))
     .text("sum(a, b) = a + b")
     .children(
-      opt[Int]("c1")
+      opt[Int]("constituent1")
+        .abbr("c1")
         .required()
         .action((value, command) => command.asInstanceOf[Sum].copy(component1 = value))
-        .text("c1 is an Int property"),
-      opt[Int]("c2")
+        .text("constituent1 is an Int property"),
+      opt[Int]("constituent2")
+        .abbr("c1")
         .required()
         .action((value, command) => command.asInstanceOf[Sum].copy(component2 = value))
-        .text("c2 is an Int property"),
+        .text("constituent2 is an Int property"),
     )
 
-  val multiplication = cmd("mult")
+  val multiplication = cmd("multiplication")
+    .abbr("mult")
     .action((_, _) => Command.Multiply(0, 0))
-    .text("mult(a,b) = a + b")
+    .text("multiplication(a,b) = a + b")
     .children(
-      opt[Int]("c1")
+      opt[Int]("constituent1")
+        .abbr("c1")
         .required()
         .action((value, command) => command.asInstanceOf[Multiply].copy(factor1 = value))
-        .text("c1 is an Int property"),
-      opt[Int]("c2")
-        .required()
+        .text("constituent1 is an Int property"),
+      opt[Int]("constituent2")
+        .abbr("c2")
         .action((value, command) => command.asInstanceOf[Multiply].copy(factor2 = value))
-        .text("c2 is an Int property"),
+        .text("constituent2 is an Int property"),
     )
 
-  val divide = cmd("div")
+  val divide = cmd("divide")
+    .abbr("div")
     .action((_, _) => Command.Divide(0, 1))
-    .text("div(a, b) = a / b")
+    .text("divide(a, b) = a / b")
     .children(
-      opt[Int]("d")
+      opt[Int]("dividend")
+        .abbr("d")
         .required()
         .action((value, command) => command.asInstanceOf[Divide].copy(dividend = value))
-        .text("d = dividend, is an Int property"),
-      opt[NonZeroInt]("dd")
+        .text("dividend is an Int property"),
+      opt[NonZeroInt]("divisor")
+        .abbr("dd")
         .required()
         .action((value, command) => command.asInstanceOf[Divide].copy(divisor = value))
-        .text("dd = divisor, is an Int property"),
+        .text("divisor is an Int property"),
     )
 
   val random = cmd("random")

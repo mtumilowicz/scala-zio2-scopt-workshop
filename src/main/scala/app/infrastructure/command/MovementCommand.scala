@@ -14,10 +14,10 @@ object MovementCommand {
     .action((_, _) => Command.Go(None))
     .text("go - go into chosen direction")
     .children(
-      opt[CardinalDirection]("dir")
+      opt[CardinalDirection]("direction")
         .required()
         .action((value, command) => command.asInstanceOf[Go].copy(direction = Some(value)))
-        .text("dir is a direction to go"),
+        .text("direction to go: south, east, west, north"),
     )
 
 }
