@@ -11,8 +11,91 @@
     * introduction into command line applications using scopt
 * workshop
     * implement command to print random number that can be long or int and positive or negative
-    * example: `random --n int --positive`
+        * example: `random --n int --positive`
+    * run using `docker run`
+        * example `docker run scala-zio2-scopt-workshop sum -c1 2 -c2 3`
+        * remember to first `docker:publishLocal`
 
 ## scopt
 * command line options parsing library
 * functional DSL
+    * scaffold
+        ```
+        import scopt.OParser
+        val builder = OParser.builder[Config]
+        val parser1 = {
+          import builder._
+          OParser.sequence(
+            programName("scopt"),
+            head("scopt", "4.x"),
+            // command or options,
+            // validations
+          )
+        }
+        ```
+    * option
+        * flag
+            ```
+            opt[Unit]("verbose")
+                .action((_, c) => c.copy(verbose = true))
+                .text("verbose is a flag")
+            ```
+        * typed option
+            ```
+            opt[Int]("foo")
+                .abbr("f")
+                .action((x, c) => c.copy(foo = x))
+                .text("foo is an integer property"),
+            ```
+        * preconfigured
+            ```
+            help("help") // prints usage text
+            version("version") // prints header text
+            note("...") // add given string to the usage text
+            ```
+        * arguments
+            * similar to options, but accepts values without `--` or `-`
+            * example: "sum 2 3"
+            * prefer options
+            * example
+                ```
+                cmd("sum")
+                    .action((_, _) => Command.Sum(0, 0))
+                    .text("sum(a, b) = a + b")
+                    .children(
+                      arg[Int]("constituent1")
+                        .abbr("c1")
+                        .action((value, command) => command.asInstanceOf[Sum].copy(component1 = value))
+                        .text("constituent1 is an Int property"),
+                      arg[Int]("constituent2")
+                        .abbr("c2")
+                        .action((value, command) => command.asInstanceOf[Sum].copy(component2 = value))
+                        .text("constituent2 is an Int property"),
+                    )
+                ```
+    * command
+        ```
+        cmd("update")
+              .action((_, c) => c.copy(mode = "update"))
+              .text("update is a command.")
+              .children(
+                // options
+              )
+        ```
+    * validation
+        ```
+        checkConfig(
+          c =>
+            if (c.keepalive && c.xyz) failure("xyz cannot keep alive")
+            else success)
+        )
+        ```
+* parsing
+    ```
+    OParser.parse(parser1, args, Config()) match {
+      case Some(config) =>
+        // do something
+      case _ =>
+        // arguments are bad, error message will have been displayed
+    }
+    ```
