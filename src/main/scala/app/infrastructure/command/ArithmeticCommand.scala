@@ -22,7 +22,7 @@ object ArithmeticCommand {
         .action((value, command) => command.asInstanceOf[Sum].copy(component1 = value))
         .text("constituent1 is an Int property"),
       opt[Int]("constituent2")
-        .abbr("c1")
+        .abbr("c2")
         .required()
         .action((value, command) => command.asInstanceOf[Sum].copy(component2 = value))
         .text("constituent2 is an Int property"),

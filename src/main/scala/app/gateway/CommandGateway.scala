@@ -11,7 +11,7 @@ case class CommandGateway(service: CommandService) {
 
   private def parse(commands: List[String]) =
     ZioScopt.parse(CommandParser.parser, commands, Command.Default)
-      .orElseFail(CommandExecutionError.notSupported)
+      .orElseFail(CommandExecutionError.notSupported(commands.mkString(" ")))
 }
 
 object CommandGateway {

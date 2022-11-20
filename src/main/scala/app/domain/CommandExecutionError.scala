@@ -10,5 +10,5 @@ object CommandExecutionError {
 
   val emptyCommand = CommandExecutionError("parsing error: empty command not supported")
 
-  val notSupported = CommandExecutionError("parsing error: command not supported")
+  def notSupported(command: String) = CommandExecutionError(s"parsing error: command $command not supported")
 }
