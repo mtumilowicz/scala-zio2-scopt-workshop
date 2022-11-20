@@ -3,8 +3,8 @@ package app
 import app.domain.{CardinalDirection, CommandExecutionError, CommandService}
 import app.gateway.CommandGateway
 import zio.test.Assertion.{equalTo, fails, isGreaterThanEqualTo, isLessThan}
-import zio.test.{TestConsole, ZIOSpecDefault, assert, assertTrue, assertZIO}
-import zio.{Chunk, ZIOAppArgs, ZLayer}
+import zio.test.{TestAspect, TestConsole, ZIOSpecDefault, assert, assertTrue, assertZIO}
+import zio.{Chunk, ZIOAppArgs, ZLayer, durationInt}
 
 object FullCommand {
   val sumCommand = Chunk("sum", "--constituent1", "2", "--constituent2", "3")
@@ -43,7 +43,8 @@ object AppSpec extends ZIOSpecDefault {
     randomNegativeSuccess,
     randomDefaultSuccess,
     helpSuccess
-  ).provideSome(CommandGateway.live, CommandService.live)
+  ).provideSome(CommandGateway.live, CommandService.live) @@
+    TestAspect.timeout(1.second) // due to bug in ZIO tests hangs out on helpSuccess indefinitely
 
   lazy val emptyArgsError = test("empty args => error") {
     assertZIO(subject.exit)(fails(equalTo(CommandExecutionError.emptyCommand)))
