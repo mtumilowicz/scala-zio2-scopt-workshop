@@ -53,6 +53,8 @@
             version("version") // prints header text
             note("...") // add given string to the usage text
             ```
+            * by default, when the --help or --version are invoked, they call sys.exit(0) after printing the
+            help or version information
         * arguments
             * similar to options, but accepts values without `--` or `-`
             * example: "sum 2 3"
@@ -73,15 +75,26 @@
                         .text("constituent2 is an Int property"),
                     )
                 ```
+        * validation
+            ```
+            opt[Int]('f', "foo")
+              .action( (x, c) => c.copy(intValue = x) )
+              .validate( x =>
+                if (x > 0) success
+                else failure("Option --foo must be >0") )
+              .validate( x => failure("Just because") )
+            ```
     * command
-        ```
-        cmd("update")
-              .action((_, c) => c.copy(mode = "update"))
-              .text("update is a command.")
-              .children(
-                // options
-              )
-        ```
+        * used to express git branch kind of argument (name means something)
+        * example
+            ```
+            cmd("update")
+                  .action((_, c) => c.copy(mode = "update"))
+                  .text("update is a command.")
+                  .children(
+                    // options
+                  )
+            ```
     * validation
         ```
         checkConfig(
@@ -99,3 +112,23 @@
         // arguments are bad, error message will have been displayed
     }
     ```
+* effects
+    * example
+        ```
+        OParser.runParser(parser1, args, Config()) match {
+          case (result, effects) =>
+            OParser.runEffects(effects, new DefaultOEffectSetup {
+              // ignore terminate
+              override def terminate(exitState: Either[String, Unit]): Unit = ()
+            })
+
+            result match {
+              Some(config) =>
+                // do something
+              case _ =>
+                // arguments are bad, error message will have been displayed
+            }
+        }
+        ```
+* integration
+    * refined types
