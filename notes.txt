@@ -104,31 +104,73 @@
         )
         ```
 * parsing
-    ```
-    OParser.parse(parser1, args, Config()) match {
-      case Some(config) =>
-        // do something
-      case _ =>
-        // arguments are bad, error message will have been displayed
-    }
-    ```
-* effects
-    * example
+    * basic
         ```
-        OParser.runParser(parser1, args, Config()) match {
-          case (result, effects) =>
-            OParser.runEffects(effects, new DefaultOEffectSetup {
-              // ignore terminate
-              override def terminate(exitState: Either[String, Unit]): Unit = ()
-            })
-
-            result match {
-              Some(config) =>
-                // do something
-              case _ =>
-                // arguments are bad, error message will have been displayed
+        OParser.parse(parser1, args, Config()) match {
+          case Some(config) =>
+            // do something
+          case _ =>
+            // arguments are bad, error message will have been displayed
+        }
+        ```
+        uses as a default
+        ```
+        abstract class DefaultOEffectSetup extends OEffectSetup {
+          override def displayToOut(msg: String): Unit = {
+            Console.out.println(msg)
+          }
+          override def displayToErr(msg: String): Unit = {
+            Console.err.println(msg)
+          }
+          override def reportError(msg: String): Unit = {
+            displayToErr("Error: " + msg)
+          }
+          override def reportWarning(msg: String): Unit = {
+            displayToErr("Warning: " + msg)
+          }
+          override def terminate(exitState: Either[String, Unit]): Unit =
+            exitState match {
+              case Left(_)  => platform.exit(1)
+              case Right(_) => platform.exit(0)
             }
         }
         ```
-* integration
+    * advanced
+        * by default, scopt emits output when needed to stderr and stdout
+        * if your application requires parsing arguments while not producing output directly, you may wish to
+        intercept the side effects
+        * example
+            ```
+            OParser.runParser(parser1, args, Config()) match {
+              case (result, effects) =>
+                OParser.runEffects(effects, new DefaultOEffectSetup {
+                    // override methods here
+                })
+
+                result match {
+                  Some(config) =>
+                    // do something
+                  case _ =>
+                    // arguments are bad, error message will have been displayed
+                }
+            }
+            ```
+* custom types
+    * example
+        ```
+        object WeekDays extends Enumeration {
+          type WeekDays = Value
+          val Mon, Tue, Wed, Thur, Fri, Sat, Sun = Value
+        }
+
+        implicit val weekDaysRead: scopt.Read[WeekDays.Value] =
+          scopt.Read.reads(WeekDays withName _)
+        ```
     * refined types
+        ```
+        implicit val nonZeroRead: scopt.Read[NonZeroInt] =
+          scopt.Read.intRead.map(unsafeParseInt)
+
+        private def unsafeParseInt(i: Int): NonZeroInt = refineV[NonZero](i)
+          .fold(_ => throw new IllegalArgumentException("'" + i + "' cannot be zero."), identity)
+        ```
