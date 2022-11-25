@@ -11,7 +11,7 @@
     * introduction into command line applications using scopt
 * workshop
     * implement command to print random number that can be long or int and positive or negative
-        * example: `random --n int --positive`
+        * example: `random --positive`
     * run using `docker run`
         * example `docker run scala-zio2-scopt-workshop sum -c1 2 -c2 3`
         * remember to first `docker:publishLocal`
