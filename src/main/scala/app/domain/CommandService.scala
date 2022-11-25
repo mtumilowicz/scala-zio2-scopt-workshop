@@ -18,8 +18,7 @@ class CommandService {
       case Some(dir) => wrap(Console.printLine(show"going into $dir"))
       case None => wrap(Console.printLine(show"no direction home"))
     }
-    case Command.Help => ZIO.unit
-    case Command.Default => CommandExecutionError.zio(CommandExecutionError.emptyCommand.message)
+    case Command.Default => ZIO.unit
   }
 
   private def rand(negative: Boolean): Int =

@@ -14,8 +14,8 @@ object CommandParser {
 
     OParser.sequence(
       programName("scopt"),
-      head("scopt", "4.x"),
-      help("help").action((_, _) => Command.Help),
+      head("scala-zio2-scopt-workshop", "1.0.0"),
+      help("help"),
       ArithmeticCommand.sum,
       ArithmeticCommand.multiplication,
       ArithmeticCommand.divide,

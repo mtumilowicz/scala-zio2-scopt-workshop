@@ -11,5 +11,4 @@ object Command {
   case class Random(negative: Boolean) extends Command
   case class Go(direction: Option[CardinalDirection]) extends Command
   case object Default extends Command
-  case object Help extends Command
 }

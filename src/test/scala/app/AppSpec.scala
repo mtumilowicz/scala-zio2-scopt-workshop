@@ -3,8 +3,8 @@ package app
 import app.domain.{CardinalDirection, CommandExecutionError, CommandService}
 import app.gateway.CommandGateway
 import zio.test.Assertion.{equalTo, fails, isGreaterThanEqualTo, isLessThan}
-import zio.test.{TestAspect, TestConsole, ZIOSpecDefault, assert, assertTrue, assertZIO}
-import zio.{Chunk, ZIOAppArgs, ZLayer, durationInt}
+import zio.test.{TestConsole, ZIOSpecDefault, assert, assertTrue, assertZIO}
+import zio.{Chunk, ZIOAppArgs, ZLayer}
 
 object FullCommand {
   val sumCommand = Chunk("sum", "--constituent1", "2", "--constituent2", "3")
@@ -13,7 +13,6 @@ object FullCommand {
   val randomPositive = Chunk("random", "--positive")
   val randomNegative = Chunk("random", "--negative")
   val randomDefault = Chunk("random")
-  val help = Chunk("--help")
 }
 
 object AbbreviatedCommand {
@@ -42,9 +41,7 @@ object AppSpec extends ZIOSpecDefault {
     randomPositiveSuccess,
     randomNegativeSuccess,
     randomDefaultSuccess,
-    helpSuccess
-  ).provideSome(CommandGateway.live, CommandService.live) @@
-    TestAspect.timeout(1.second) // due to bug in ZIO tests hangs out on helpSuccess indefinitely
+  ).provideSome(CommandGateway.live, CommandService.live)
 
   lazy val emptyArgsError = test("empty args => error") {
     assertZIO(subject.exit)(fails(equalTo(CommandExecutionError.emptyCommand)))
@@ -108,13 +105,6 @@ object AppSpec extends ZIOSpecDefault {
       result <- firstOutput
     } yield assert(result.toInt)(isGreaterThanEqualTo(0))
   }.provideSome[CommandGateway](argsLayer(FullCommand.randomDefault))
-
-  lazy val helpSuccess = test("help") {
-    for {
-      _ <- subject
-      result <- firstOutput
-    } yield assertTrue(result.nonEmpty)
-  }.provideSome[CommandGateway](argsLayer(FullCommand.help))
 
 
   private def argsLayer(chunk: Chunk[String]) = ZLayer.succeed(ZIOAppArgs(chunk))
