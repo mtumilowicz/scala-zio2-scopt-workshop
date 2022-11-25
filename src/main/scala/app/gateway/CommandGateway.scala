@@ -1,24 +1,24 @@
 package app.gateway
 
 import app.domain.{Command, CommandExecutionError, CommandService}
-import app.infrastructure.CommandParser
-import scopt.{DefaultOEffectSetup, OParser}
-import zio.{IO, UIO, ZIO, ZLayer}
+import app.infrastructure.{CommandParser, ScoptZio}
+import zio.{IO, ZIO, ZLayer}
 
 case class CommandGateway(service: CommandService) {
 
   def parse(commands: List[String]): IO[CommandExecutionError, Unit] = {
     if (commands.isEmpty) ZIO.fail(CommandExecutionError.emptyCommand)
-    else OParser.runParser(CommandParser.parser, commands, Command.Default) match {
-      case (result, effects) =>
-        OParser.runEffects(effects, new DefaultOEffectSetup {
-          override def terminate(exitState: Either[String, Unit]): Unit = ()
-        })
-        result match {
-          case Some(command) => service.execute(command)
-          case _ => ZIO.fail(CommandExecutionError.notSupported(commands.mkString(" ")))
-        }
-    }
+    else ScoptZio.runParser(CommandParser.parser, commands, Command.Default)
+      .some.flatMap(service.execute)
+      .orElseFail(CommandExecutionError.notSupported(commands.mkString(" ")))
+  }
+
+  // only for demonstration: using that method hangs out app when command is --help due to scopt internal behaviour
+  def parseHangsOut(commands: List[String]): IO[CommandExecutionError, Unit] = {
+    if (commands.isEmpty) ZIO.fail(CommandExecutionError.emptyCommand)
+    else ScoptZio.runParserHangsOut(CommandParser.parser, commands, Command.Default)
+      .flatMap(service.execute)
+      .orElseFail(CommandExecutionError.notSupported(commands.mkString(" ")))
   }
 }
 

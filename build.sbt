@@ -9,6 +9,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "scala-zio2-scopt-workshop",
     libraryDependencies ++= Seq(
+      compilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
       "dev.zio" %% "zio" % "2.0.3",
       "com.github.scopt" %% "scopt" % "4.1.0",
       "eu.timepit" %% "refined"                 % "0.10.1",
