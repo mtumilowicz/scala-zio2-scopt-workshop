@@ -6,7 +6,7 @@ import zio.{IO, ZIO, ZLayer}
 
 case class CommandGateway(service: CommandService) {
 
-  def parse(commands: List[String]): IO[CommandExecutionError, Unit] = {
+  def execute(commands: List[String]): IO[CommandExecutionError, Unit] = {
     if (commands.isEmpty) ZIO.fail(CommandExecutionError.emptyCommand)
     else ScoptZio.runParser(CommandParser.parser, commands, Command.Default)
       .some.flatMap(service.execute)

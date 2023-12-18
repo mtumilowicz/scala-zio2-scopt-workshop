@@ -9,17 +9,17 @@ class CommandService {
 
   val random = new scala.util.Random
 
-  def execute(command: Command) = command match {
-    case Command.Sum(c1, c2) => wrap(Console.printLine(c1 + c2))
-    case Command.Multiply(c1, c2) => wrap(Console.printLine(c1 * c2))
-    case Command.Divide(c1, c2) => wrap(Console.printLine(c1 / c2.value))
-    case Command.Random(negative) => wrap(Console.printLine(rand(negative)))
+  def execute(command: Command): IO[CommandExecutionError, Unit] = (command match {
+    case Command.Sum(c1, c2) => Console.printLine(c1 + c2)
+    case Command.Multiply(c1, c2) => Console.printLine(c1 * c2)
+    case Command.Divide(c1, c2) => Console.printLine(c1 / c2.value)
+    case Command.Random(negative) => Console.printLine(rand(negative))
     case Command.Go(direction) => direction match {
-      case Some(dir) => wrap(Console.printLine(show"going into $dir"))
-      case None => wrap(Console.printLine(show"no direction home"))
+      case Some(dir) => Console.printLine(show"going into $dir")
+      case None => Console.printLine(show"no direction home")
     }
     case Command.Default => ZIO.unit
-  }
+  }).mapError(CommandExecutionError.fromError)
 
   private def rand(negative: Boolean): Int =
     if (negative) {
@@ -27,9 +27,6 @@ class CommandService {
     } else {
       random.between(0, Int.MaxValue)
     }
-
-  private def wrap(execution: IO[IOException, Unit]): IO[CommandExecutionError, Unit] =
-    execution.mapError(CommandExecutionError.fromError)
 
 }
 
